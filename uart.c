@@ -189,93 +189,113 @@ Date        Description
  || defined(__AVR_AT90S4414__) || defined(__AVR_AT90S4434__) \
  || defined(__AVR_AT90S8515__) || defined(__AVR_AT90S8535__) \
  || defined(__AVR_ATmega103__)
-	/* old AVR classic or ATmega103 with one UART */
-	#define AT90_UART
+	/* old AVR classic or ATmega103 with one UART  (untested) */
+        #define AT90_UART
 	#define UART0_RECEIVE_INTERRUPT   UART_RX_vect
-	#define UART0_TRANSMIT_INTERRUPT  UART_UDRE_vect
+	#define UART0_TX_REG_EMPTY_INTERRUPT  UART_UDRE_vect
+	#define UART0_TX_COMPLETE_INTERRUPT  UART_TX_vect
 	#define UART0_STATUS   USR
 	#define UART0_CONTROL  UCR
 	#define UART0_DATA     UDR  
 	#define UART0_UDRIE    UDRIE
+	#define UART0_TXCIE    TXCIE
 #elif defined(__AVR_AT90S2333__) || defined(__AVR_AT90S4433__)
-	/* old AVR classic with one UART */
+	/* old AVR classic with one UART  (untested) */
 	#define AT90_UART
 	#define UART0_RECEIVE_INTERRUPT   UART_RX_vect
-	#define UART0_TRANSMIT_INTERRUPT  UART_UDRE_vect
+	#define UART0_TX_REG_EMPTY_INTERRUPT  UART_UDRE_vect
+	#define UART0_TX_COMPLETE_INTERRUPT  UART_TX_vect
 	#define UART0_STATUS   UCSRA
 	#define UART0_CONTROL  UCSRB
 	#define UART0_DATA     UDR 
 	#define UART0_UDRIE    UDRIE
+	#define UART0_TXCIE    TXCIE
 #elif  defined(__AVR_ATmega8__)  || defined(__AVR_ATmega16__) || defined(__AVR_ATmega32__) \
   || defined(__AVR_ATmega323__)
 	/* ATmega with one USART */
 	#define ATMEGA_USART
 	#define UART0_RECEIVE_INTERRUPT   USART_RXC_vect
-	#define UART0_TRANSMIT_INTERRUPT  USART_UDRE_vect
+	#define UART0_TX_REG_EMPTY_INTERRUPT  USART_UDRE_vect
+	#define UART0_TX_COMPLETE_INTERRUPT  USART_TX_vect
 	#define UART0_STATUS   UCSRA
 	#define UART0_CONTROL  UCSRB
 	#define UART0_DATA     UDR
 	#define UART0_UDRIE    UDRIE
+	#define UART0_TXCIE    TXCIE
 #elif defined(__AVR_ATmega8U2__) || defined(__AVR_ATmega16U2__) || defined(__AVR_ATmega16U4__) || \
       defined(__AVR_ATmega32U2__) || defined(__AVR_ATmega32U4__) || defined(__AVR_ATmega32U6__)
 	/* ATmega with one USART, but is called USART1 (untested) */
 	#define ATMEGA_USART1
 	#define UART1_RECEIVE_INTERRUPT   USART1_RX_vect
-	#define UART1_TRANSMIT_INTERRUPT  USART1_UDRE_vect
+	#define UART1_TX_REG_EMPTY_INTERRUPT  USART1_UDRE_vect
+	#define UART1_TX_COMPLETE_INTERRUPT  USART1_TX_vect
 	#define UART1_STATUS   UCSR1A
 	#define UART1_CONTROL  UCSR1B
 	#define UART1_DATA     UDR1
 	#define UART1_UDRIE    UDRIE1
+	#define UART1_TXCIE    TXCIE1
 #elif  defined(__AVR_ATmega8515__) || defined(__AVR_ATmega8535__)
-	/* ATmega with one USART */
+	/* ATmega with one USART  (untested) */
 	#define ATMEGA_USART
 	#define UART0_RECEIVE_INTERRUPT   USART_RX_vect
-	#define UART0_TRANSMIT_INTERRUPT  USART_UDRE_vect
+	#define UART0_TX_REG_EMPTY_INTERRUPT  USART_UDRE_vect
+	#define UART0_TX_COMPLETE_INTERRUPT  USART_TX_vect
 	#define UART0_STATUS   UCSRA
 	#define UART0_CONTROL  UCSRB
 	#define UART0_DATA     UDR
 	#define UART0_UDRIE    UDRIE
+	#define UART0_TXCIE    TXCIE
 #elif defined(__AVR_ATmega163__) 
-	/* ATmega163 with one UART */
+	/* ATmega163 with one UART  (untested) */
 	#define ATMEGA_UART
 	#define UART0_RECEIVE_INTERRUPT   UART_RX_vect
-	#define UART0_TRANSMIT_INTERRUPT  UART_UDRE_vect
+	#define UART0_TX_REG_EMPTY_INTERRUPT  UART_UDRE_vect
+	#define UART0_TX_COMPLETE_INTERRUPT  UART_TX_vect
 	#define UART0_STATUS   UCSRA
 	#define UART0_CONTROL  UCSRB
 	#define UART0_DATA     UDR
 	#define UART0_UDRIE    UDRIE
+	#define UART0_TXCIE    TXCIE
 #elif defined(__AVR_ATmega162__) 
 	/* ATmega with two USART */
 	#define ATMEGA_USART0
 	#define ATMEGA_USART1
 	#define UART0_RECEIVE_INTERRUPT   USART0_RXC_vect
 	#define UART1_RECEIVE_INTERRUPT   USART1_RXC_vect
-	#define UART0_TRANSMIT_INTERRUPT  USART0_UDRE_vect
-	#define UART1_TRANSMIT_INTERRUPT  USART1_UDRE_vect
+	#define UART0_TX_REG_EMPTY_INTERRUPT  USART0_UDRE_vect
+	#define UART1_TX_REG_EMPTY_INTERRUPT  USART1_UDRE_vect
+	#define UART0_TX_COMPLETE_INTERRUPT  USART0_TX_vect
+	#define UART1_TX_COMPLETE_INTERRUPT  USART1_TX_vect
 	#define UART0_STATUS   UCSR0A
 	#define UART0_CONTROL  UCSR0B
 	#define UART0_DATA     UDR0
 	#define UART0_UDRIE    UDRIE0
+	#define UART0_TXCIE    TXCIE0
 	#define UART1_STATUS   UCSR1A
 	#define UART1_CONTROL  UCSR1B
 	#define UART1_DATA     UDR1
 	#define UART1_UDRIE    UDRIE1
+	#define UART1_TXCIE    TXCIE1
 #elif defined(__AVR_ATmega64__) || defined(__AVR_ATmega128__) 
 	/* ATmega with two USART */
 	#define ATMEGA_USART0
 	#define ATMEGA_USART1
 	#define UART0_RECEIVE_INTERRUPT   USART0_RX_vect
 	#define UART1_RECEIVE_INTERRUPT   USART1_RX_vect
-	#define UART0_TRANSMIT_INTERRUPT  USART0_UDRE_vect
-	#define UART1_TRANSMIT_INTERRUPT  USART1_UDRE_vect
+	#define UART0_TX_REG_EMPTY_INTERRUPT  USART0_UDRE_vect
+	#define UART1_TX_REG_EMPTY_INTERRUPT  USART1_UDRE_vect
+	#define UART0_TX_COMPLETE_INTERRUPT  USART0_TX_vect
+	#define UART1_TX_COMPLETE_INTERRUPT  USART1_TX_vect
 	#define UART0_STATUS   UCSR0A
 	#define UART0_CONTROL  UCSR0B
 	#define UART0_DATA     UDR0
 	#define UART0_UDRIE    UDRIE0
+	#define UART0_TXCIE    TXCIE0
 	#define UART1_STATUS   UCSR1A
 	#define UART1_CONTROL  UCSR1B
 	#define UART1_DATA     UDR1
 	#define UART1_UDRIE    UDRIE1
+	#define UART1_TXCIE    TXCIE1
 #elif defined(__AVR_ATmega161__)
 	/* ATmega with UART */
 	#error "AVR ATmega161 currently not supported by this libaray !"
@@ -283,11 +303,13 @@ Date        Description
 	/* ATmega with one USART */
 	#define ATMEGA_USART
 	#define UART0_RECEIVE_INTERRUPT   USART0_RX_vect
-	#define UART0_TRANSMIT_INTERRUPT  USART0_UDRE_vect
+	#define UART0_TX_REG_EMPTY_INTERRUPT  USART0_UDRE_vect
+	#define UART0_TX_COMPLETE_INTERRUPT  USART0_TX_vect
 	#define UART0_STATUS   UCSRA
 	#define UART0_CONTROL  UCSRB
 	#define UART0_DATA     UDR
 	#define UART0_UDRIE    UDRIE
+	#define UART0_TXCIE    TXCIE
 #elif defined(__AVR_ATmega48__) ||defined(__AVR_ATmega88__) || defined(__AVR_ATmega168__) || \
       defined(__AVR_ATmega48P__) ||defined(__AVR_ATmega88P__) || defined(__AVR_ATmega168P__) || \
       defined(__AVR_ATmega328P__) 
@@ -295,19 +317,23 @@ Date        Description
 	/* ATmega with one USART */
 	#define ATMEGA_USART0
 	#define UART0_RECEIVE_INTERRUPT   USART_RX_vect
-	#define UART0_TRANSMIT_INTERRUPT  USART_UDRE_vect
+	#define UART0_TX_REG_EMPTY_INTERRUPT  USART_UDRE_vect
+	#define UART0_TX_COMPLETE_INTERRUPT  USART0_TX_vect
 	#define UART0_STATUS   UCSR0A
 	#define UART0_CONTROL  UCSR0B
 	#define UART0_DATA     UDR0
 	#define UART0_UDRIE    UDRIE0
+	#define UART0_TXCIE    TXCIE0
 #elif defined(__AVR_ATtiny2313__) || defined(__AVR_ATtiny2313A__) || defined(__AVR_ATtiny4313__)
 	#define ATMEGA_USART
 	#define UART0_RECEIVE_INTERRUPT   USART_RX_vect 
-	#define UART0_TRANSMIT_INTERRUPT  USART_UDRE_vect
+	#define UART0_TX_REG_EMPTY_INTERRUPT  USART_UDRE_vect
+	#define UART0_TX_COMPLETE_INTERRUPT  USART_TX_vect
 	#define UART0_STATUS   UCSRA
 	#define UART0_CONTROL  UCSRB
 	#define UART0_DATA     UDR
 	#define UART0_UDRIE    UDRIE
+	#define UART0_TXCIE    TXCIE
 #elif defined(__AVR_ATmega329__) ||\
       defined(__AVR_ATmega649__) ||\
       defined(__AVR_ATmega325__) ||defined(__AVR_ATmega3250__) ||\
@@ -315,22 +341,26 @@ Date        Description
 	/* ATmega with one USART */
 	#define ATMEGA_USART0
 	#define UART0_RECEIVE_INTERRUPT   USART0_RX_vect
-	#define UART0_TRANSMIT_INTERRUPT  USART0_UDRE_vect
+	#define UART0_TX_REG_EMPTY_INTERRUPT  USART0_UDRE_vect
+	#define UART0_TX_COMPLETE_INTERRUPT  USART0_TX_vect
 	#define UART0_STATUS   UCSR0A
 	#define UART0_CONTROL  UCSR0B
 	#define UART0_DATA     UDR0
 	#define UART0_UDRIE    UDRIE0
+	#define UART0_TXCIE    TXCIE0
 #elif defined(__AVR_ATmega3290__) ||\
       defined(__AVR_ATmega6490__)
 	/* TLS-Separated these two from the previous group because of inconsistency in the USART_RX */
 	/* ATmega with one USART */
 	#define ATMEGA_USART0
 	#define UART0_RECEIVE_INTERRUPT   USART_RX_vect
-	#define UART0_TRANSMIT_INTERRUPT  USART0_UDRE_vect
+	#define UART0_TX_REG_EMPTY_INTERRUPT  USART0_UDRE_vect
+	#define UART0_TX_COMPLETE_INTERRUPT  USART0_TX_vect
 	#define UART0_STATUS   UCSR0A
 	#define UART0_CONTROL  UCSR0B
 	#define UART0_DATA     UDR0
 	#define UART0_UDRIE    UDRIE0
+	#define UART0_TXCIE    TXCIE0
 #elif defined(__AVR_ATmega2560__) || defined(__AVR_ATmega1280__) || defined(__AVR_ATmega640__)
 	/* ATmega with four USART */
 	#define ATMEGA_USART0
@@ -341,35 +371,45 @@ Date        Description
 	#define UART1_RECEIVE_INTERRUPT   USART1_RX_vect
 	#define UART2_RECEIVE_INTERRUPT   USART2_RX_vect
 	#define UART3_RECEIVE_INTERRUPT   USART3_RX_vect
-	#define UART0_TRANSMIT_INTERRUPT  USART0_UDRE_vect
-	#define UART1_TRANSMIT_INTERRUPT  USART1_UDRE_vect
-	#define UART2_TRANSMIT_INTERRUPT  USART2_UDRE_vect
-	#define UART3_TRANSMIT_INTERRUPT  USART3_UDRE_vect
+	#define UART0_TX_REG_EMPTY_INTERRUPT  USART0_UDRE_vect
+	#define UART1_TX_REG_EMPTY_INTERRUPT  USART1_UDRE_vect
+	#define UART2_TX_REG_EMPTY_INTERRUPT  USART2_UDRE_vect
+	#define UART3_TX_REG_EMPTY_INTERRUPT  USART3_UDRE_vect
+	#define UART0_TX_COMPLETE_INTERRUPT  USART0_TX_vect
+	#define UART1_TX_COMPLETE_INTERRUPT  USART1_TX_vect
+	#define UART2_TX_COMPLETE_INTERRUPT  USART2_TX_vect
+	#define UART3_TX_COMPLETE_INTERRUPT  USART3_TX_vect
 	#define UART0_STATUS   UCSR0A
 	#define UART0_CONTROL  UCSR0B
 	#define UART0_DATA     UDR0
 	#define UART0_UDRIE    UDRIE0
+	#define UART0_TXCIE    TXCIE0
 	#define UART1_STATUS   UCSR1A
 	#define UART1_CONTROL  UCSR1B
 	#define UART1_DATA     UDR1
-	#define UART1_UDRIE    UDRIE1  
+	#define UART1_UDRIE    UDRIE1
+	#define UART1_TXCIE    TXCIE1  
 	#define UART2_STATUS   UCSR2A
 	#define UART2_CONTROL  UCSR2B
 	#define UART2_DATA     UDR2
-	#define UART2_UDRIE    UDRIE2  
+	#define UART2_UDRIE    UDRIE2
+	#define UART2_TXCIE    TXCIE2  
 	#define UART3_STATUS   UCSR3A
 	#define UART3_CONTROL  UCSR3B
 	#define UART3_DATA     UDR3
-	#define UART3_UDRIE    UDRIE3  
+	#define UART3_UDRIE    UDRIE3
+	#define UART3_TXCIE    TXCIE3  
 #elif defined(__AVR_ATmega644__)
 	/* ATmega with one USART */
 	#define ATMEGA_USART0
 	#define UART0_RECEIVE_INTERRUPT   USART0_RX_vect
-	#define UART0_TRANSMIT_INTERRUPT  USART0_UDRE_vect
+	#define UART0_TX_REG_EMPTY_INTERRUPT  USART0_UDRE_vect
+	#define UART0_TX_COMPLETE_INTERRUPT  USART0_TX_vect
 	#define UART0_STATUS   UCSR0A
 	#define UART0_CONTROL  UCSR0B
 	#define UART0_DATA     UDR0
 	#define UART0_UDRIE    UDRIE0
+	#define UART0_TXCIE    TXCIE0
 #elif defined(__AVR_ATmega164P__) || defined(__AVR_ATmega324P__) || defined(__AVR_ATmega644P__) || \
       defined(__AVR_ATmega1284P__)
 	/* ATmega with two USART */
@@ -377,16 +417,20 @@ Date        Description
 	#define ATMEGA_USART1
 	#define UART0_RECEIVE_INTERRUPT   USART0_RX_vect
 	#define UART1_RECEIVE_INTERRUPT   USART1_RX_vect
-	#define UART0_TRANSMIT_INTERRUPT  USART0_UDRE_vect
-	#define UART1_TRANSMIT_INTERRUPT  USART1_UDRE_vect
+	#define UART0_TX_REG_EMPTY_INTERRUPT  USART0_UDRE_vect
+	#define UART1_TX_REG_EMPTY_INTERRUPT  USART1_UDRE_vect
+	#define UART0_TX_COMPLETE_INTERRUPT  USART0_TX_vect
+	#define UART1_TX_COMPLETE_INTERRUPT  USART1_TX_vect
 	#define UART0_STATUS   UCSR0A
 	#define UART0_CONTROL  UCSR0B
 	#define UART0_DATA     UDR0
 	#define UART0_UDRIE    UDRIE0
+	#define UART0_TXCIE    TXCIE0
 	#define UART1_STATUS   UCSR1A
 	#define UART1_CONTROL  UCSR1B
 	#define UART1_DATA     UDR1
 	#define UART1_UDRIE    UDRIE1
+	#define UART1_TXCIE    TXCIE1
 #else
 	#error "no UART definition for MCU available"
 #endif
@@ -525,7 +569,7 @@ Purpose:  called when the UART has received a character
 }
 
 
-ISR(UART0_TRANSMIT_INTERRUPT)
+ISR(UART0_TX_REG_EMPTY_INTERRUPT)
 /*************************************************************************
 Function: UART Data Register Empty interrupt
 Purpose:  called when the UART is ready to transmit the next byte
@@ -534,6 +578,10 @@ Purpose:  called when the UART is ready to transmit the next byte
     uint16_t tmptail;
 
     if ( UART_TxHead != UART_TxTail) {
+#ifdef USART0_RTS_ENABLED
+	/* set RTS high before writing to UART */
+	USART0_RTS_HIGH;
+#endif
         /* calculate and store new buffer index */
         tmptail = (UART_TxTail + 1) & UART_TX0_BUFFER_MASK;
         UART_TxTail = tmptail;
@@ -545,6 +593,17 @@ Purpose:  called when the UART is ready to transmit the next byte
     }
 }
 
+#ifdef USART0_RTS_ENABLED
+ISR(UART0_TX_COMPLETE_INTERRUPT)
+/*************************************************************************
+Function: UART0 Transmit complete
+Purpose:  called when the entire frame in the Transmit Shift Register has been
+          shifted out and there are no new data currently present in the transmit buffer
+**************************************************************************/
+{
+	USART0_RTS_LOW;
+}
+#endif
 
 /*************************************************************************
 Function: uart0_init()
@@ -616,6 +675,12 @@ void uart0_init(uint16_t baudrate)
 	/* Enable UART receiver and transmitter and receive complete interrupt */
 	UART0_CONTROL = _BV(RXCIE)|(1<<RXEN)|(1<<TXEN);
 
+#endif
+
+#ifdef USART0_RTS_ENABLED
+	USART0_RTS_INIT;
+	/* enable TXC interrupt to clear RTS */
+	UART0_CONTROL |= _BV(UART0_TXCIE);
 #endif
 
 } /* uart0_init */
@@ -694,7 +759,7 @@ void uart0_putc(uint8_t data)
 	UART_TxHead = tmphead;
 
 	/* enable UDRE interrupt */
-	UART0_CONTROL    |= _BV(UART0_UDRIE);
+	UART0_CONTROL |= _BV(UART0_UDRIE);
 
 } /* uart0_putc */
 
@@ -797,7 +862,7 @@ Purpose:  called when the UART1 has received a character
 }
 
 
-ISR(UART1_TRANSMIT_INTERRUPT)
+ISR(UART1_TX_REG_EMPTY_INTERRUPT)
 /*************************************************************************
 Function: UART1 Data Register Empty interrupt
 Purpose:  called when the UART1 is ready to transmit the next byte
@@ -806,6 +871,10 @@ Purpose:  called when the UART1 is ready to transmit the next byte
 	uint16_t tmptail;
 
 	if ( UART1_TxHead != UART1_TxTail) {
+#ifdef USART1_RTS_ENABLED
+	        /* set RTS high before writing to UART */
+	        USART1_RTS_HIGH;
+#endif
 		/* calculate and store new buffer index */
 		tmptail = (UART1_TxTail + 1) & UART_TX1_BUFFER_MASK;
 		UART1_TxTail = tmptail;
@@ -817,6 +886,17 @@ Purpose:  called when the UART1 is ready to transmit the next byte
 	}
 }
 
+#ifdef USART1_RTS_ENABLED
+ISR(UART1_TX_COMPLETE_INTERRUPT)
+/*************************************************************************
+Function: UART1 Transmit complete
+Purpose:  called when the entire frame in the Transmit Shift Register has been
+          shifted out and there are no new data currently present in the transmit buffer
+**************************************************************************/
+{
+	USART1_RTS_LOW;
+}
+#endif
 
 /*************************************************************************
 Function: uart1_init()
@@ -848,6 +928,13 @@ void uart1_init(uint16_t baudrate)
 #else
 	UCSR1C = (3<<UCSZ10);
 #endif
+
+#ifdef USART1_RTS_ENABLED
+	USART1_RTS_INIT;
+	/* enable TXC interrupt to clear RTS */
+	UART1_CONTROL |= _BV(UART1_TXCIE);
+#endif
+	
 } /* uart_init */
 
 
@@ -1032,7 +1119,7 @@ Purpose:  called when the UART2 has received a character
 }
 
 
-ISR(UART2_TRANSMIT_INTERRUPT)
+ISR(UART2_TX_REG_EMPTY_INTERRUPT)
 /*************************************************************************
 Function: UART2 Data Register Empty interrupt
 Purpose:  called when the UART2 is ready to transmit the next byte
@@ -1042,6 +1129,10 @@ Purpose:  called when the UART2 is ready to transmit the next byte
 
 
 	if ( UART2_TxHead != UART2_TxTail) {
+#ifdef USART2_RTS_ENABLED
+	        /* set RTS high before writing to UART */
+	        USART2_RTS_HIGH;
+#endif
 		/* calculate and store new buffer index */
 		tmptail = (UART2_TxTail + 1) & UART_TX2_BUFFER_MASK;
 		UART2_TxTail = tmptail;
@@ -1053,6 +1144,17 @@ Purpose:  called when the UART2 is ready to transmit the next byte
 	}
 }
 
+#ifdef USART2_RTS_ENABLED
+ISR(UART2_TX_COMPLETE_INTERRUPT)
+/*************************************************************************
+Function: UART2 Transmit complete
+Purpose:  called when the entire frame in the Transmit Shift Register has been
+          shifted out and there are no new data currently present in the transmit buffer
+**************************************************************************/
+{
+	USART2_RTS_LOW;
+}
+#endif
 
 /*************************************************************************
 Function: uart2_init()
@@ -1085,6 +1187,13 @@ void uart2_init(uint16_t baudrate)
 #else
 	UCSR2C = (3<<UCSZ20);
 #endif
+
+#ifdef USART2_RTS_ENABLED
+	USART2_RTS_INIT;
+	/* enable TXC interrupt to clear RTS */
+	UART2_CONTROL |= _BV(UART2_TXCIE);
+#endif
+
 } /* uart_init */
 
 
@@ -1270,7 +1379,7 @@ Purpose:  called when the UART3 has received a character
 }
 
 
-ISR(UART3_TRANSMIT_INTERRUPT)
+ISR(UART3_TX_REG_EMPTY_INTERRUPT)
 /*************************************************************************
 Function: UART3 Data Register Empty interrupt
 Purpose:  called when the UART3 is ready to transmit the next byte
@@ -1280,6 +1389,10 @@ Purpose:  called when the UART3 is ready to transmit the next byte
 
 
 	if ( UART3_TxHead != UART3_TxTail) {
+#ifdef USART3_RTS_ENABLED
+	        /* set RTS high before writing to UART */
+	        USART3_RTS_HIGH;
+#endif
 		/* calculate and store new buffer index */
 		tmptail = (UART3_TxTail + 1) & UART_TX3_BUFFER_MASK;
 		UART3_TxTail = tmptail;
@@ -1291,6 +1404,17 @@ Purpose:  called when the UART3 is ready to transmit the next byte
 	}
 }
 
+#ifdef USART3_RTS_ENABLED
+ISR(UART3_TX_COMPLETE_INTERRUPT)
+/*************************************************************************
+Function: UART3 Transmit complete
+Purpose:  called when the entire frame in the Transmit Shift Register has been
+          shifted out and there are no new data currently present in the transmit buffer
+**************************************************************************/
+{
+	USART3_RTS_LOW;
+}
+#endif
 
 /*************************************************************************
 Function: uart3_init()
@@ -1322,6 +1446,13 @@ void uart3_init(uint16_t baudrate)
 #else
 	UCSR3C = (3<<UCSZ30);
 #endif
+
+#ifdef USART3_RTS_ENABLED
+	USART3_RTS_INIT;
+	/* enable TXC interrupt to clear RTS */
+	UART3_CONTROL |= _BV(UART3_TXCIE);
+#endif
+
 } /* uart_init */
 
 

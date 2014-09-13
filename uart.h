@@ -109,6 +109,10 @@ Date        Description
 #error "This library requires AVR-GCC 3.4 or later, update to newer AVR-GCC compiler !"
 #endif
 
+#ifdef UART_USE_CONFIG_HEADER
+#include "config.h"
+#else
+
 /*
  * constants and macros
  */
@@ -118,6 +122,89 @@ Date        Description
 //#define USART1_ENABLED
 //#define USART2_ENABLED 
 //#define USART3_ENABLED
+#endif
+
+/* RTS pin, ddr and port defines must be defined to app specific values before including uart.h*/
+#if defined(USART0_ENABLED) && defined(USART0_RTS_ENABLED)
+
+#if !defined(USART0_RTS_PIN) || !defined(USART0_RTS_DDR) || !defined(USART0_RTS_PORT)
+#error "USART0_RTS_[PIN|DDR|PORT] undefined, define them before including uart.h"
+#endif
+
+#define USART0_RTS_INIT				       \
+  do {						       \
+    USART0_RTS_DDR |= _BV( USART0_RTS_PIN );	       \
+    USART0_RTS_PORT &= ~( _BV( USART0_RTS_PIN ) );     \
+  } while( 0 )
+
+#define USART0_RTS_HIGH				\
+  USART0_RTS_PORT |= _BV( USART0_RTS_PIN );
+
+#define USART0_RTS_LOW					\
+  USART0_RTS_PORT &= ~( _BV( USART0_RTS_PIN ) );
+
+#endif
+
+#if defined(USART1_ENABLED) && defined(USART1_RTS_ENABLED)
+
+#if !defined(USART1_RTS_PIN) || !defined(USART1_RTS_DDR) || !defined(USART1_RTS_PORT)
+#error "USART1_RTS_[PIN|DDR|PORT] undefined, define them before including uart.h"
+#endif
+
+#define USART1_RTS_INIT				       \
+  do {						       \
+    USART1_RTS_DDR |= _BV( USART1_RTS_PIN );	       \
+    USART1_RTS_PORT &= ~( _BV( USART1_RTS_PIN ) );     \
+  } while( 0 )
+
+#define USART1_RTS_HIGH				\
+  USART1_RTS_PORT |= _BV( USART1_RTS_PIN );
+
+#define USART1_RTS_LOW					\
+  USART1_RTS_PORT &= ~( _BV( USART1_RTS_PIN ) );
+
+#endif
+
+#if defined(USART2_ENABLED) && defined(USART2_RTS_ENABLED)
+
+#if !defined(USART2_RTS_PIN) || !defined(USART2_RTS_DDR) || !defined(USART2_RTS_PORT)
+#error "USART2_RTS_[PIN|DDR|PORT] undefined, define them before including uart.h"
+#endif
+
+#define USART2_RTS_INIT				       \
+  do {						       \
+    USART2_RTS_DDR |= _BV( USART2_RTS_PIN );	       \
+    USART2_RTS_PORT &= ~( _BV( USART2_RTS_PIN ) );     \
+  } while( 0 )
+
+#define USART2_RTS_HIGH				\
+  USART2_RTS_PORT |= _BV( USART2_RTS_PIN );
+
+#define USART2_RTS_LOW					\
+  USART2_RTS_PORT &= ~( _BV( USART2_RTS_PIN ) );
+
+#endif
+
+#if defined(USART3_ENABLED) && defined(USART3_RTS_ENABLED)
+
+#if !defined(USART3_RTS_PIN) || !defined(USART3_RTS_DDR) || !defined(USART3_RTS_PORT)
+#error "USART3_RTS_[PIN|DDR|PORT] undefined, define them before including uart.h"
+#endif
+
+#define USART3_RTS_INIT				       \
+  do {						       \
+    USART3_RTS_DDR |= _BV( USART3_RTS_PIN );	       \
+    USART3_RTS_PORT &= ~( _BV( USART3_RTS_PIN ) );     \
+  } while( 0 )
+
+#define USART3_RTS_HIGH				\
+  USART3_RTS_PORT |= _BV( USART3_RTS_PIN );
+
+#define USART3_RTS_LOW					\
+  USART3_RTS_PORT &= ~( _BV( USART3_RTS_PIN ) );
+
+#endif
+
 
 /* Set size of receive and transmit buffers */
 
