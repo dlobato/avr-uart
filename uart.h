@@ -109,7 +109,7 @@ Date        Description
 #error "This library requires AVR-GCC 3.4 or later, update to newer AVR-GCC compiler !"
 #endif
 
-#ifdef UART_USE_CONFIG_HEADER
+#ifdef USE_CONFIG_HEADER
 #include "config.h"
 #else
 
@@ -123,88 +123,6 @@ Date        Description
 //#define USART2_ENABLED 
 //#define USART3_ENABLED
 #endif
-
-/* RTS pin, ddr and port defines must be defined to app specific values before including uart.h*/
-#if defined(USART0_ENABLED) && defined(USART0_RTS_ENABLED)
-
-#if !defined(USART0_RTS_PIN) || !defined(USART0_RTS_DDR) || !defined(USART0_RTS_PORT)
-#error "USART0_RTS_[PIN|DDR|PORT] undefined, define them before including uart.h"
-#endif
-
-#define USART0_RTS_INIT				       \
-  do {						       \
-    USART0_RTS_DDR |= _BV( USART0_RTS_PIN );	       \
-    USART0_RTS_PORT &= ~( _BV( USART0_RTS_PIN ) );     \
-  } while( 0 )
-
-#define USART0_RTS_HIGH				\
-  USART0_RTS_PORT |= _BV( USART0_RTS_PIN );
-
-#define USART0_RTS_LOW					\
-  USART0_RTS_PORT &= ~( _BV( USART0_RTS_PIN ) );
-
-#endif
-
-#if defined(USART1_ENABLED) && defined(USART1_RTS_ENABLED)
-
-#if !defined(USART1_RTS_PIN) || !defined(USART1_RTS_DDR) || !defined(USART1_RTS_PORT)
-#error "USART1_RTS_[PIN|DDR|PORT] undefined, define them before including uart.h"
-#endif
-
-#define USART1_RTS_INIT				       \
-  do {						       \
-    USART1_RTS_DDR |= _BV( USART1_RTS_PIN );	       \
-    USART1_RTS_PORT &= ~( _BV( USART1_RTS_PIN ) );     \
-  } while( 0 )
-
-#define USART1_RTS_HIGH				\
-  USART1_RTS_PORT |= _BV( USART1_RTS_PIN );
-
-#define USART1_RTS_LOW					\
-  USART1_RTS_PORT &= ~( _BV( USART1_RTS_PIN ) );
-
-#endif
-
-#if defined(USART2_ENABLED) && defined(USART2_RTS_ENABLED)
-
-#if !defined(USART2_RTS_PIN) || !defined(USART2_RTS_DDR) || !defined(USART2_RTS_PORT)
-#error "USART2_RTS_[PIN|DDR|PORT] undefined, define them before including uart.h"
-#endif
-
-#define USART2_RTS_INIT				       \
-  do {						       \
-    USART2_RTS_DDR |= _BV( USART2_RTS_PIN );	       \
-    USART2_RTS_PORT &= ~( _BV( USART2_RTS_PIN ) );     \
-  } while( 0 )
-
-#define USART2_RTS_HIGH				\
-  USART2_RTS_PORT |= _BV( USART2_RTS_PIN );
-
-#define USART2_RTS_LOW					\
-  USART2_RTS_PORT &= ~( _BV( USART2_RTS_PIN ) );
-
-#endif
-
-#if defined(USART3_ENABLED) && defined(USART3_RTS_ENABLED)
-
-#if !defined(USART3_RTS_PIN) || !defined(USART3_RTS_DDR) || !defined(USART3_RTS_PORT)
-#error "USART3_RTS_[PIN|DDR|PORT] undefined, define them before including uart.h"
-#endif
-
-#define USART3_RTS_INIT				       \
-  do {						       \
-    USART3_RTS_DDR |= _BV( USART3_RTS_PIN );	       \
-    USART3_RTS_PORT &= ~( _BV( USART3_RTS_PIN ) );     \
-  } while( 0 )
-
-#define USART3_RTS_HIGH				\
-  USART3_RTS_PORT |= _BV( USART3_RTS_PIN );
-
-#define USART3_RTS_LOW					\
-  USART3_RTS_PORT &= ~( _BV( USART3_RTS_PIN ) );
-
-#endif
-
 
 /* Set size of receive and transmit buffers */
 
@@ -300,23 +218,64 @@ Date        Description
 #error "size of UART_RX3_BUFFER_SIZE + UART_TX3_BUFFER_SIZE larger than size of SRAM"
 #endif
 
-/* 
-** high byte error return code of uart_getc()
-*/
-#define UART_FRAME_ERROR      0x0800              /**< Framing Error by UART       */
-#define UART_OVERRUN_ERROR    0x0400              /**< Overrun condition by UART   */
-#define UART_BUFFER_OVERFLOW  0x0200              /**< receive ringbuffer overflow */
-#define UART_NO_DATA          0x0100              /**< no receive data available   */
+/* RX error flags */
+enum error_flags_t{
+  UART_NO_DATA         = 0x01, /**< no receive data available   */
+  UART_BUFFER_OVERFLOW = 0x02, /**< receive ringbuffer overflow */
+  UART_OVERRUN_ERROR   = 0x04, /**< Overrun condition by UART   */
+  UART_FRAME_ERROR     = 0x08, /**< Framing Error by UART       */
+  UART_PARITY_ERROR    = 0x10  /**< Parity Error by UART        */
+};
+
+/* byte format, from arduino HardwareSerial.h */
+#define SERIAL_5N1 0x00
+#define SERIAL_6N1 0x02
+#define SERIAL_7N1 0x04
+#define SERIAL_8N1 0x06
+#define SERIAL_5N2 0x08
+#define SERIAL_6N2 0x0A
+#define SERIAL_7N2 0x0C
+#define SERIAL_8N2 0x0E
+#define SERIAL_5E1 0x20
+#define SERIAL_6E1 0x22
+#define SERIAL_7E1 0x24
+#define SERIAL_8E1 0x26
+#define SERIAL_5E2 0x28
+#define SERIAL_6E2 0x2A
+#define SERIAL_7E2 0x2C
+#define SERIAL_8E2 0x2E
+#define SERIAL_5O1 0x30
+#define SERIAL_6O1 0x32
+#define SERIAL_7O1 0x34
+#define SERIAL_8O1 0x36
+#define SERIAL_5O2 0x38
+#define SERIAL_6O2 0x3A
+#define SERIAL_7O2 0x3C
+#define SERIAL_8O2 0x3E
 
 /* Macros, to allow use of legacy names */
 
-#define uart_init(b)      uart0_init(b)
+#define uart_init(b,f)    uart0_init(b,f)
 #define uart_getc()       uart0_getc()
 #define uart_putc(d)      uart0_putc(d)
 #define uart_puts(s)      uart0_puts(s)
 #define uart_puts_p(s)    uart0_puts_p(s)
 #define uart_available()  uart0_available()
 #define uart_flush()      uart0_flush()
+
+/* uart_dev struct and macro to init */
+struct uart_dev_t{
+  void (*init_)(uint16_t baudrate, uint8_t byte_format);
+  uint16_t (*getc_)(void);
+  void (*putc_)(uint8_t data);
+  uint16_t (*available_)(void);
+  void (*flush_)(void);
+  uint8_t last_error;
+};
+
+#define INIT_UART_DEV(init_, getc_, putc_, available_, flush_)	\
+  { init_, getc_, putc_, available_, flush_, 0 }
+
 
 /*
 ** function prototypes
@@ -325,9 +284,14 @@ Date        Description
 /**
    @brief   Initialize UART and set baudrate 
    @param   baudrate Specify baudrate using macro UART_BAUD_SELECT()
+   @param   byte_format, set using definitions SERIAL_XYZ.
+            X is number of bits (5,6,7,8). Y is parity bit 
+	    N=no parity, O=odd parity, E=even parity.
+	    Z is stop bits, 1 or 2. FIXME: only implemented on 
+	    ATMEGA_USARTN variants.
    @return  none
 */
-extern void uart0_init(uint16_t baudrate);
+extern void uart0_init(uint16_t baudrate, uint8_t byte_format);
 
 
 /**
@@ -438,7 +402,7 @@ extern void uart0_flush(void);
 
 
 /** @brief  Initialize USART1 (only available on selected ATmegas) @see uart_init */
-extern void uart1_init(uint16_t baudrate);
+extern void uart1_init(uint16_t baudrate, uint8_t byte_format);
 /** @brief  Get received byte of USART1 from ringbuffer. (only available on selected ATmega) @see uart_getc */
 extern uint16_t uart1_getc(void);
 /** @brief  Peek at next byte in USART1 ringbuffer */
@@ -458,7 +422,7 @@ extern void uart1_flush(void);
 
 
 /** @brief  Initialize USART2 (only available on selected ATmegas) @see uart_init */
-extern void uart2_init(uint16_t baudrate);
+extern void uart2_init(uint16_t baudrate, uint8_t byte_format);
 /** @brief  Get received byte of USART2 from ringbuffer. (only available on selected ATmega) @see uart_getc */
 extern uint16_t uart2_getc(void);
 /** @brief  Peek at next byte in USART2 ringbuffer */
@@ -478,7 +442,7 @@ extern void uart2_flush(void);
 
 
 /** @brief  Initialize USART3 (only available on selected ATmegas) @see uart_init */
-extern void uart3_init(uint16_t baudrate);
+extern void uart3_init(uint16_t baudrate, uint8_t byte_format);
 /** @brief  Get received byte of USART3 from ringbuffer. (only available on selected ATmega) @see uart_getc */
 extern uint16_t uart3_getc(void);
 /** @brief  Peek at next byte in USART3 ringbuffer */
