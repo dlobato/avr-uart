@@ -638,7 +638,7 @@ Purpose:  called when the entire frame in the Transmit Shift Register has been
           shifted out and there are no new data currently present in the transmit buffer
 **************************************************************************/
 {
-	USARTN_RS485_TXEN_LOW(USART0_RS485_TXEN_PIN, USART3_RS485_TXEN_PORT);
+	USARTN_RS485_TXEN_LOW(USART0_RS485_TXEN_PIN, USART0_RS485_TXEN_PORT);
 }
 #endif
 
