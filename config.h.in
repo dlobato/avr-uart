@@ -10,16 +10,10 @@
 
 /* RS-485 specifics */
 
-/* Enable RTS signal to activate transmiter mode */
-//#define USART0_RTS_ENABLED
-//#define USART1_RTS_ENABLED
-//#define USART2_RTS_ENABLED
-//#define USART3_RTS_ENABLED
-
-/* Define RTS pin, ddr and port */
-
-/* example for USART1 */
-//#define USART1_RTS_ENABLED
-//#define USART1_RTS_PIN PB0
-//#define USART1_RTS_DDR DDRB
-//#define USART1_RTS_PORT PORTB
+/* example for USART1: enable mode and define TX pin,ddr and port*/
+/*
+#define USART1_RS485_MODE
+#define USART1_RS485_TXEN_PIN PB7
+#define USART1_RS485_TXEN_DDR DDRB
+#define USART1_RS485_TXEN_PORT PORTB
+*/
