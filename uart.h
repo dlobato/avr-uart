@@ -227,6 +227,11 @@ enum error_flags_t{
   UART_PARITY_ERROR    = 0x10  /**< Parity Error by UART        */
 };
 
+/* status flags */
+enum status_flags_t{
+  UART_TRANSMITTING	= 0x01, /**< transmitting data */
+};
+
 /* byte format, from arduino HardwareSerial.h */
 #define SERIAL_5N1 0x00
 #define SERIAL_6N1 0x02
@@ -396,9 +401,14 @@ extern void uart0_puts_p(const char *s );
 extern uint16_t uart0_available(void);
 
 /**
- *  @brief   Flush bytes waiting in receive buffer
+ *  @brief   Waits for the transmission of outgoing serial data to complete
  */
 extern void uart0_flush(void);
+
+/**
+ *  @brief   Flush bytes waiting in receive buffer
+ */
+extern void uart0_flush_rx(void);
 
 
 /** @brief  Initialize USART1 (only available on selected ATmegas) @see uart_init */
@@ -417,8 +427,10 @@ extern void uart1_puts_p(const char *s );
 #define uart1_puts_P(__s)       uart1_puts_p(PSTR(__s))
 /** @brief   Return number of bytes waiting in the receive buffer */
 extern uint16_t uart1_available(void);
-/** @brief   Flush bytes waiting in receive buffer */
+/** @brief  Waits for the transmission of outgoing serial data to complete  */
 extern void uart1_flush(void);
+/** @brief   Flush bytes waiting in receive buffer */
+extern void uart1_flush_rx(void);
 
 
 /** @brief  Initialize USART2 (only available on selected ATmegas) @see uart_init */
@@ -437,8 +449,10 @@ extern void uart2_puts_p(const char *s );
 #define uart2_puts_P(__s)       uart2_puts_p(PSTR(__s))
 /** @brief   Return number of bytes waiting in the receive buffer */
 extern uint16_t uart2_available(void);
-/** @brief   Flush bytes waiting in receive buffer */
+/** @brief  Waits for the transmission of outgoing serial data to complete  */
 extern void uart2_flush(void);
+/** @brief   Flush bytes waiting in receive buffer */
+extern void uart2_flush_rx(void);
 
 
 /** @brief  Initialize USART3 (only available on selected ATmegas) @see uart_init */
@@ -457,8 +471,11 @@ extern void uart3_puts_p(const char *s );
 #define uart3_puts_P(__s)       uart3_puts_p(PSTR(__s))
 /** @brief   Return number of bytes waiting in the receive buffer */
 extern uint16_t uart3_available(void);
-/** @brief   Flush bytes waiting in receive buffer */
+/** @brief  Waits for the transmission of outgoing serial data to complete  */
 extern void uart3_flush(void);
+/** @brief   Flush bytes waiting in receive buffer */
+extern void uart3_flush_rx(void);
+
 
 /**@}*/
 

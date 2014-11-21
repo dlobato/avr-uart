@@ -476,15 +476,14 @@ Date        Description
 			static volatile uint16_t UART_TxTail;
 			static volatile uint16_t UART_RxHead;
 			static volatile uint16_t UART_RxTail;
-			static volatile uint8_t UART_LastRxError;
 		#else
 			static volatile uint8_t UART_TxHead;
 			static volatile uint8_t UART_TxTail;
 			static volatile uint8_t UART_RxHead;
 			static volatile uint8_t UART_RxTail;
-			static volatile uint8_t UART_LastRxError;
 		#endif
-		
+		static volatile uint8_t UART_LastRxError;
+		static volatile uint8_t UART_Status;
 	#endif
 #endif
 
@@ -498,14 +497,14 @@ Date        Description
 			static volatile uint16_t UART1_TxTail;
 			static volatile uint16_t UART1_RxHead;
 			static volatile uint16_t UART1_RxTail;
-			static volatile uint8_t UART1_LastRxError;
 		#else
 			static volatile uint8_t UART1_TxHead;
 			static volatile uint8_t UART1_TxTail;
 			static volatile uint8_t UART1_RxHead;
 			static volatile uint8_t UART1_RxTail;
-			static volatile uint8_t UART1_LastRxError;
-		#endif		
+		#endif
+		static volatile uint8_t UART1_LastRxError;	
+		static volatile uint8_t UART1_Status;
 	#endif
 #endif
 
@@ -519,14 +518,14 @@ Date        Description
 			static volatile uint16_t UART2_TxTail;
 			static volatile uint16_t UART2_RxHead;
 			static volatile uint16_t UART2_RxTail;
-			static volatile uint8_t UART2_LastRxError;
 		#else
 			static volatile uint8_t UART2_TxHead;
 			static volatile uint8_t UART2_TxTail;
 			static volatile uint8_t UART2_RxHead;
 			static volatile uint8_t UART2_RxTail;
-			static volatile uint8_t UART2_LastRxError;
-		#endif		
+		#endif
+		static volatile uint8_t UART2_LastRxError;	
+		static volatile uint8_t UART2_Status;		
 	#endif
 #endif
 
@@ -540,15 +539,14 @@ Date        Description
 			static volatile uint16_t UART3_TxTail;
 			static volatile uint16_t UART3_RxHead;
 			static volatile uint16_t UART3_RxTail;
-			static volatile uint8_t UART3_LastRxError;
 		#else
 			static volatile uint8_t UART3_TxHead;
 			static volatile uint8_t UART3_TxTail;
 			static volatile uint8_t UART3_RxHead;
 			static volatile uint8_t UART3_RxTail;
-			static volatile uint8_t UART3_LastRxError;
 		#endif
-
+		static volatile uint8_t UART3_LastRxError;	
+		static volatile uint8_t UART3_Status;
 	#endif
 #endif
 
@@ -602,7 +600,7 @@ Purpose:  called when the UART has received a character
         /* store received data in buffer */
         UART_RxBuf[tmphead] = data;
     }
-    UART_LastRxError = err_flags;   
+    UART_LastRxError = err_flags;
 }
 
 
@@ -630,7 +628,6 @@ Purpose:  called when the UART is ready to transmit the next byte
     }
 }
 
-#ifdef USART0_RS485_MODE
 ISR(UART0_TX_COMPLETE_INTERRUPT)
 /*************************************************************************
 Function: UART0 Transmit complete
@@ -638,9 +635,11 @@ Purpose:  called when the entire frame in the Transmit Shift Register has been
           shifted out and there are no new data currently present in the transmit buffer
 **************************************************************************/
 {
+#ifdef USART0_RS485_MODE
 	USARTN_RS485_TXEN_LOW(USART0_RS485_TXEN_PIN, USART0_RS485_TXEN_PORT);
-}
 #endif
+	UART_Status &= ~UART_TRANSMITTING;
+}
 
 /*************************************************************************
 Function: uart0_init()
@@ -655,13 +654,14 @@ void uart0_init(uint16_t baudrate, uint8_t byte_format)
 	UART_RxHead = 0;
 	UART_RxTail = 0;
 	UART_LastRxError = 0;
+	UART_Status = 0;
 
 #if defined( AT90_UART )
 	/* set baud rate */
 	UBRR = (uint8_t)baudrate;
 
 	/* enable UART receiver and transmitter and receive complete interrupt */
-	UART0_CONTROL = _BV(RXCIE)|_BV(RXEN)|_BV(TXEN);
+	UART0_CONTROL = _BV(RXCIE)|_BV(TXCIE)|_BV(RXEN)|_BV(TXEN);
 
 #elif defined (ATMEGA_USART)
 	/* Set baud rate */
@@ -673,7 +673,7 @@ void uart0_init(uint16_t baudrate, uint8_t byte_format)
 	UBRRL = (uint8_t) baudrate;
 
 	/* Enable USART receiver and transmitter and receive complete interrupt */
-	UART0_CONTROL = _BV(RXCIE)|(1<<RXEN)|(1<<TXEN);
+	UART0_CONTROL = _BV(RXCIE)|_BV(TXCIE)|(1<<RXEN)|(1<<TXEN);
 
 	/* Set frame format: asynchronous, 8data, no parity, 1stop bit */
 #ifdef URSEL
@@ -692,7 +692,7 @@ void uart0_init(uint16_t baudrate, uint8_t byte_format)
 	UBRR0L = (uint8_t) baudrate;
 
 	/* Enable USART receiver and transmitter and receive complete interrupt */
-	UART0_CONTROL = _BV(RXCIE0)|(1<<RXEN0)|(1<<TXEN0);
+	UART0_CONTROL = _BV(RXCIE0)|_BV(TXCIE0)|(1<<RXEN0)|(1<<TXEN0);
 
 	/* Set frame format: byte_format */
 #ifdef URSEL0
@@ -711,14 +711,12 @@ void uart0_init(uint16_t baudrate, uint8_t byte_format)
 	UBRR   = (uint8_t) baudrate;
 
 	/* Enable UART receiver and transmitter and receive complete interrupt */
-	UART0_CONTROL = _BV(RXCIE)|(1<<RXEN)|(1<<TXEN);
+	UART0_CONTROL = _BV(RXCIE)|_BV(TXCIE)|(1<<RXEN)|(1<<TXEN);
 
 #endif
 
 #ifdef USART0_RS485_MODE
 	USARTN_RS485_TXEN_INIT(USART0_RS485_TXEN_PIN, USART0_RS485_TXEN_DDR, USART0_RS485_TXEN_PORT);
-	/* enable TXC interrupt to clear RTS */
-	UART0_CONTROL |= _BV(UART0_TXCIE);
 #endif
 
 } /* uart0_init */
@@ -798,6 +796,8 @@ void uart0_putc(uint8_t data)
 
 	/* enable UDRE interrupt */
 	UART0_CONTROL |= _BV(UART0_UDRIE);
+	/* set transmitting flag. cleared at TXCI */
+	UART_Status |= UART_TRANSMITTING;
 
 } /* uart0_putc */
 
@@ -848,14 +848,27 @@ uint16_t uart0_available(void)
 
 /*************************************************************************
 Function: uart0_flush()
-Purpose:  Flush bytes waiting the receive buffer.  Acutally ignores them.
+Purpose:  Waits for the transmission of outgoing serial data to complete
 Input:    None
 Returns:  None
 **************************************************************************/
 void uart0_flush(void)
 {
-	UART_RxHead = UART_RxTail;
+	while (UART_Status & UART_TRANSMITTING);
 } /* uart0_flush */
+
+/*************************************************************************
+Function: uart0_flush_rx()
+Purpose:  Flush bytes waiting in receive buffer
+Input:    None
+Returns:  None
+**************************************************************************/
+void uart0_flush_rx(void)
+{
+	UART_RxHead = UART_RxTail;
+} /* uart0_flush_rx */
+
+
 
 #endif
 
@@ -935,7 +948,6 @@ Purpose:  called when the UART1 is ready to transmit the next byte
 	}
 }
 
-#ifdef USART1_RS485_MODE
 ISR(UART1_TX_COMPLETE_INTERRUPT)
 /*************************************************************************
 Function: UART1 Transmit complete
@@ -943,9 +955,11 @@ Purpose:  called when the entire frame in the Transmit Shift Register has been
           shifted out and there are no new data currently present in the transmit buffer
 **************************************************************************/
 {
+#ifdef USART1_RS485_MODE
 	USARTN_RS485_TXEN_LOW(USART1_RS485_TXEN_PIN, USART1_RS485_TXEN_PORT);
-}
 #endif
+	UART1_Status &= ~UART_TRANSMITTING;
+}
 
 /*************************************************************************
 Function: uart1_init()
@@ -960,6 +974,7 @@ void uart1_init(uint16_t baudrate, uint8_t byte_format)
 	UART1_RxHead = 0;
 	UART1_RxTail = 0;
 	UART1_LastRxError = 0;
+	UART1_Status = 0;
 
 	/* Set baud rate */
 	if ( baudrate & 0x8000 ) {
@@ -970,7 +985,7 @@ void uart1_init(uint16_t baudrate, uint8_t byte_format)
 	UBRR1L = (uint8_t) baudrate;
 
 	/* Enable USART receiver and transmitter and receive complete interrupt */
-	UART1_CONTROL = _BV(RXCIE1)|(1<<RXEN1)|(1<<TXEN1);
+	UART1_CONTROL = _BV(RXCIE1)|_BV(TXCIE1)|(1<<RXEN1)|(1<<TXEN1);
 
 	/* Set frame format: byte_format */
 #ifdef URSEL1
@@ -981,8 +996,6 @@ void uart1_init(uint16_t baudrate, uint8_t byte_format)
 
 #ifdef USART1_RS485_MODE
 	USARTN_RS485_TXEN_INIT(USART1_RS485_TXEN_PIN, USART1_RS485_TXEN_DDR, USART1_RS485_TXEN_PORT);
-	/* enable TXC interrupt to clear RTS */
-	UART1_CONTROL |= _BV(UART1_TXCIE);
 #endif
 	
 } /* uart_init */
@@ -1062,6 +1075,8 @@ void uart1_putc(uint8_t data)
 
 	/* enable UDRE interrupt */
 	UART1_CONTROL    |= _BV(UART1_UDRIE);
+	/* set transmitting flag. cleared at TXCI */
+	UART1_Status |= UART_TRANSMITTING;
 
 } /* uart1_putc */
 
@@ -1110,18 +1125,28 @@ uint16_t uart1_available(void)
 	return (UART_RX1_BUFFER_SIZE + UART1_RxHead - UART1_RxTail) & UART_RX1_BUFFER_MASK;
 } /* uart1_available */
 
-
-
 /*************************************************************************
 Function: uart1_flush()
-Purpose:  Flush bytes waiting the receive buffer.  Acutally ignores them.
+Purpose:  Waits for the transmission of outgoing serial data to complete
 Input:    None
 Returns:  None
 **************************************************************************/
 void uart1_flush(void)
 {
-	UART1_RxHead = UART1_RxTail;
+	while (UART1_Status & UART_TRANSMITTING);
 } /* uart1_flush */
+
+/*************************************************************************
+Function: uart1_flush_rx()
+Purpose:  Flush bytes waiting the receive buffer.  Acutally ignores them.
+Input:    None
+Returns:  None
+**************************************************************************/
+void uart1_flush_rx(void)
+{
+	UART1_RxHead = UART1_RxTail;
+} /* uart1_flush_rx */
+
 
 #endif
 
@@ -1205,7 +1230,6 @@ Purpose:  called when the UART2 is ready to transmit the next byte
 	}
 }
 
-#ifdef USART2_RS485_MODE
 ISR(UART2_TX_COMPLETE_INTERRUPT)
 /*************************************************************************
 Function: UART2 Transmit complete
@@ -1213,9 +1237,11 @@ Purpose:  called when the entire frame in the Transmit Shift Register has been
           shifted out and there are no new data currently present in the transmit buffer
 **************************************************************************/
 {
+#ifdef USART2_RS485_MODE
 	USARTN_RS485_TXEN_LOW(USART2_RS485_TXEN_PIN, USART2_RS485_TXEN_PORT);
-}
 #endif
+	UART2_Status &= ~UART_TRANSMITTING;
+}
 
 /*************************************************************************
 Function: uart2_init()
@@ -1230,6 +1256,7 @@ void uart2_init(uint16_t baudrate, uint8_t byte_format)
 	UART2_RxHead = 0;
 	UART2_RxTail = 0;
 	UART2_LastRxError = 0;
+	UART2_Status = 0;
 
 	/* Set baud rate */
 	if ( baudrate & 0x8000 ) {
@@ -1240,7 +1267,7 @@ void uart2_init(uint16_t baudrate, uint8_t byte_format)
 	UBRR2L = (uint8_t) baudrate;
 
 	/* Enable USART receiver and transmitter and receive complete interrupt */
-	UART2_CONTROL = _BV(RXCIE2)|(1<<RXEN2)|(1<<TXEN2);
+	UART2_CONTROL = _BV(RXCIE2)|_BV(TXCIE2)|(1<<RXEN2)|(1<<TXEN2);
 
 	/* Set frame format: byte_format */
 #ifdef URSEL2
@@ -1251,8 +1278,6 @@ void uart2_init(uint16_t baudrate, uint8_t byte_format)
 
 #ifdef USART2_RS485_MODE
 	USARTN_RS485_TXEN_INIT(USART2_RS485_TXEN_PIN, USART2_RS485_TXEN_DDR, USART2_RS485_TXEN_PORT);
-	/* enable TXC interrupt to clear RTS */
-	UART2_CONTROL |= _BV(UART2_TXCIE);
 #endif
 
 } /* uart_init */
@@ -1334,6 +1359,8 @@ void uart2_putc(uint8_t data)
 
 	/* enable UDRE interrupt */
 	UART2_CONTROL    |= _BV(UART2_UDRIE);
+	/* set transmitting flag. cleared at TXCI */
+	UART2_Status |= UART_TRANSMITTING;
 
 } /* uart2_putc */
 
@@ -1381,18 +1408,27 @@ uint16_t uart2_available(void)
 	return (UART_RX2_BUFFER_SIZE + UART2_RxHead - UART2_RxTail) & UART_RX2_BUFFER_MASK;
 } /* uart2_available */
 
-
-
 /*************************************************************************
 Function: uart2_flush()
-Purpose:  Flush bytes waiting the receive buffer.  Acutally ignores them.
+Purpose:  Waits for the transmission of outgoing serial data to complete
 Input:    None
 Returns:  None
 **************************************************************************/
 void uart2_flush(void)
 {
-	UART2_RxHead = UART2_RxTail;
+	while (UART2_Status & UART_TRANSMITTING);
 } /* uart2_flush */
+
+/*************************************************************************
+Function: uart2_flush_rx()
+Purpose:  Flush bytes waiting the receive buffer.  Acutally ignores them.
+Input:    None
+Returns:  None
+**************************************************************************/
+void uart2_flush_rx(void)
+{
+	UART2_RxHead = UART2_RxTail;
+} /* uart2_flush_rx */
 
 #endif
 
@@ -1476,7 +1512,6 @@ Purpose:  called when the UART3 is ready to transmit the next byte
 	}
 }
 
-#ifdef USART3_RS485_MODE
 ISR(UART3_TX_COMPLETE_INTERRUPT)
 /*************************************************************************
 Function: UART3 Transmit complete
@@ -1484,9 +1519,11 @@ Purpose:  called when the entire frame in the Transmit Shift Register has been
           shifted out and there are no new data currently present in the transmit buffer
 **************************************************************************/
 {
+#ifdef USART3_RS485_MODE
 	USARTN_RS485_TXEN_LOW(USART3_RS485_TXEN_PIN, USART3_RS485_TXEN_PORT);
-}
 #endif
+	UART3_Status &= ~UART_TRANSMITTING;
+}
 
 /*************************************************************************
 Function: uart3_init()
@@ -1501,6 +1538,7 @@ void uart3_init(uint16_t baudrate, uint8_t byte_format)
 	UART3_RxHead = 0;
 	UART3_RxTail = 0;
 	UART3_LastRxError = 0;
+	UART3_Status = 0;
 
 	/* Set baud rate */
 	if ( baudrate & 0x8000 ) {
@@ -1511,7 +1549,7 @@ void uart3_init(uint16_t baudrate, uint8_t byte_format)
 	UBRR3L = (uint8_t) baudrate;
 
 	/* Enable USART receiver and transmitter and receive complete interrupt */
-	UART3_CONTROL = _BV(RXCIE3)|(1<<RXEN3)|(1<<TXEN3);
+	UART3_CONTROL = _BV(RXCIE3)|_BV(TXCIE3)|(1<<RXEN3)|(1<<TXEN3);
 
 	/* Set frame format: byte_format */
 #ifdef URSEL3
@@ -1522,8 +1560,6 @@ void uart3_init(uint16_t baudrate, uint8_t byte_format)
 
 #ifdef USART3_RS485_MODE
 	USARTN_RS485_TXEN_INIT(USART3_RS485_TXEN_PIN, USART3_RS485_TXEN_DDR, USART3_RS485_TXEN_PORT);
-	/* enable TXC interrupt to clear RTS */
-	UART3_CONTROL |= _BV(UART3_TXCIE);
 #endif
 
 } /* uart_init */
@@ -1604,6 +1640,8 @@ void uart3_putc(uint8_t data)
 
 	/* enable UDRE interrupt */
 	UART3_CONTROL    |= _BV(UART3_UDRIE);
+	/* set transmitting flag. cleared at TXCI */
+	UART3_Status |= UART_TRANSMITTING;
 
 } /* uart3_putc */
 
@@ -1652,18 +1690,27 @@ uint16_t uart3_available(void)
 	return (UART_RX3_BUFFER_SIZE + UART3_RxHead - UART3_RxTail) & UART_RX3_BUFFER_MASK;
 } /* uart3_available */
 
-
-
 /*************************************************************************
 Function: uart3_flush()
-Purpose:  Flush bytes waiting the receive buffer.  Acutally ignores them.
+Purpose:  Waits for the transmission of outgoing serial data to complete
 Input:    None
 Returns:  None
 **************************************************************************/
 void uart3_flush(void)
 {
-	UART3_RxHead = UART3_RxTail;
+	while (UART3_Status & UART_TRANSMITTING);
 } /* uart3_flush */
+
+/*************************************************************************
+Function: uart3_flush_rx()
+Purpose:  Flush bytes waiting the receive buffer.  Acutally ignores them.
+Input:    None
+Returns:  None
+**************************************************************************/
+void uart3_flush_rx(void)
+{
+	UART3_RxHead = UART3_RxTail;
+} /* uart3_flush_rx */
 
 #endif
 
