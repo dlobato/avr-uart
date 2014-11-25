@@ -43,8 +43,7 @@ int uartio_getchar(FILE *stream){
   return input.c;
 }
 
-int uart_setup_stream(FILE *stream, struct uart_dev_t *dev, 
-		      const uint8_t rwflags){
+int uart_open_stream(FILE *stream, struct uart_dev_t *dev, const uint8_t rwflags){
   if (stream == 0 || dev == 0)
     return -1;
 
@@ -53,22 +52,41 @@ int uart_setup_stream(FILE *stream, struct uart_dev_t *dev,
   return 0;
 }
 
-uint8_t uart_geterror(FILE *stream){
-  struct uart_dev_t* uart_dev_p = (struct uart_dev_t*)fdev_get_udata(stream);
+/* uint8_t uart_geterror_stream(FILE *stream){ */
+/*   struct uart_dev_t* uart_dev_p = (struct uart_dev_t*)fdev_get_udata(stream); */
   
-  if (uart_dev_p == 0)
-    return 0;
-  return uart_dev_p->last_error;
-}
+/*   if (uart_dev_p == 0) */
+/*     return 0; */
+/*   return uart_dev_p->last_error; */
+/* } */
 
-void uart_clearerror(FILE *stream){
-  struct uart_dev_t* uart_dev_p = (struct uart_dev_t*)fdev_get_udata(stream);
+/* void uart_clearerror_stream(FILE *stream){ */
+/*   struct uart_dev_t* uart_dev_p = (struct uart_dev_t*)fdev_get_udata(stream); */
   
-  if (uart_dev_p != 0)
-    uart_dev_p->last_error = 0;
-}
+/*   if (uart_dev_p != 0) */
+/*     uart_dev_p->last_error = 0; */
+/* } */
   
 void uart_close_stream(FILE *stream){
+  uart_flush_stream(stream);
   fdev_set_udata(stream, 0);
   fdev_setup_stream(stream, 0, 0, 0);
+}
+
+struct uart_dev_t * uart_get_device_stream(FILE *stream){
+  return (struct uart_dev_t*)fdev_get_udata(stream);
+}
+
+void uart_flush_stream(FILE *stream){
+  struct uart_dev_t* uart_dev_p = (struct uart_dev_t*)fdev_get_udata(stream);
+
+  if (uart_dev_p != 0)
+    uart_dev_p->flush_();
+}
+
+uint16_t uart_available_stream(FILE *stream){
+  struct uart_dev_t* uart_dev_p = (struct uart_dev_t*)fdev_get_udata(stream);
+
+  if (uart_dev_p != 0)
+    return uart_dev_p->available_();
 }

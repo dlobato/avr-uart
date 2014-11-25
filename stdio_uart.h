@@ -10,26 +10,44 @@
 #endif
 
 /*
- * Init \c stream with uart \c dev device.
+ * Open \c stream with uart \c dev device.
  * \c rwflags set the stream direction
  * return 0 if device is successfully opened, != 0 otherwise
+ * getchar is nonblocking, so any time we read from the stream if there's no data available
+ * EOF is returned.
  */
-int uart_setup_stream(FILE *stream, struct uart_dev_t *dev, const uint8_t rwflags);
+int uart_open_stream(FILE *stream, struct uart_dev_t *dev, const uint8_t rwflags);
 
-/* 
- * get last error. error must be cleared with uart_clearerror
- */
-uint8_t uart_geterror(FILE *stream);
+/* /\*  */
+/*  * get last error. error must be cleared with uart_clearerror */
+/*  *\/ */
+/* uint8_t uart_geterror_stream(FILE *stream); */
+
+/* /\* */
+/*  * clear last error */
+/*  *\/ */
+/* void uart_clearerror_stream(FILE *stream); */
 
 /*
- * clear last error
- */
-void uart_clearerror(FILE *stream);
-
-/*
- * close stream and unlink uart device
+ * close stream and unlink uart device flushing it before
  */
 void uart_close_stream(FILE *stream);
 
+
+/*
+ * return the uart device linked to the stream
+ */
+struct uart_dev_t * uart_get_device_stream(FILE *stream);
+
+
+/*
+ * flush stream. after the call no more chars are waiting to be sent.
+ */
+void uart_flush_stream(FILE *stream);
+
+/*
+ * return number of characters available on the stream
+ */
+uint16_t uart_available_stream(FILE *stream);
 
 #endif //STDIO_UART_H
